@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Currency Converter</title>
+    <style>
+      .container{
+        height:585px;
+        width:323px;
+        background-image: linear-gradient(rgb(110, 45, 110),brown 100%);
+        border-radius: 6%;
+        border: 4px solid black;
+        position: absolute;
+        left:100px;
+        bottom: 60px;
+      }
+      .container::before{
+        content:"";
+        background-image: linear-gradient(red,blue,green,purple,brown);
+        height:600px;
+        width: 340px;
+        z-index:-1;
+         left:-9px;
+         top:-9px;
+         border-radius: 6%;
+        position: absolute;
+      }
+      .screen{
+        width:100%;
+        height:50%;
+        background-color: rgba(23, 23, 23, 0.3);
+       border-radius: 5%;
+       display: grid;
+       grid-template-columns: repeat(3,1fr);
+       grid-template-rows: repeat(2,1fr);
+
+      }
+       .btn{
+        background-color: rgba(23, 23, 23, 0);
+          height:70px;
+          width:106px;
+          border-radius: 13%;
+          color: white;
+          justify-self: center;
+          align-self: center;
+       }
+       .t1
+       {
+        height:40px;
+        background-color: rgba(23, 23, 23, 0);
+         border: 0px;
+         border-bottom: 2.5px solid white;
+         color: white;
+          justify-self:start;
+       align-self: center;
+       }
+       .t2
+       {
+        height:40px;
+        background-color: rgba(23, 23, 23, 0);
+         border: 0px;
+         border-bottom: 2.5px solid white;
+         color: white;
+          justify-self:start;
+       align-self: center;
+       }
+       #s1{
+        width:95px;
+        color: white;
+        background-color: transparent;
+        border: 0px;
+         justify-self:left;
+       align-self:center;
+        grid-column-start: 1;
+        grid-column-end: 3;
+       }
+       #s2{
+        width:95px;
+        color: white;
+        background-color: transparent;
+        border: 0px;
+         justify-self:left;
+       align-self:center;
+        grid-column-start: 1;
+        grid-column-end: 3;
+       }
+       .back{
+        font-size: 102px;
+        font-weight: bolder;
+        background-image:url(https://upload.wikimedia.org/wikipedia/commons/thumb/2/23/US_one_dollar_bill%2C_obverse%2C_series_2009.jpg/1200px-US_one_dollar_bill%2C_obverse%2C_series_2009.jpg);
+        background-clip: text;
+        color:transparent;
+       }
+       .board{
+        display: grid;
+        grid-template-columns: repeat(3,1fr);
+        grid-template-rows: repeat(4,1fr);
+       }
+       
+    </style>
+</head>
+<body style="background-color: black;">
+    <div class="container">
+        <div class="screen">
+             <select name="countries" id="s1"></select>
+            <input type="text" value="0" class="t2">
+             <select name="countries" id="s2"></select>
+            <input type="text" value="0" class="t1"> 
+        </div>
+        <div class="board">
+            <button class="btn">7</button>
+            <button class="btn">8</button>
+            <button class="btn">9</button>
+            <button class="btn">4</button>
+            <button class="btn">5</button>
+            <button class="btn">6</button>
+            <button class="btn">1</button>
+            <button class="btn">2</button>
+            <button class="btn">3</button>
+            <button class="btn">C</button>
+            <button class="btn">0</button>
+            <button class="btn">.</button>
+        </div>
+    </div>
+    <script>
+      var string="";
+let a=document.getElementsByClassName("btn");
+for(let i=0;i<=11;i++)
+{
+    if(i==9)
+    {
+a[i].addEventListener("click",()=>{
+    string="";
+    document.getElementsByClassName("t2")[0].value=string;
+    document.getElementsByClassName("t1")[0].value=0;
+})
+    }
+    else
+    {
+a[i].addEventListener("click",()=>{
+    string+=a[i].innerHTML;
+    document.getElementsByClassName("t2")[0].value=string;
+    rate(string);
+})
+    }
+}
+
+let rate=async(str)=>{
+        const sele=document.getElementById("s1");
+const sel=document.getElementById("s2");
+    let URL="https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1/currencies/"+sele.value+".json";
+    let rate=await fetch(URL);
+    let data=await rate.json();
+    await code();
+    await code_1();
+    let s1=sele.value+"";
+    let s2=sel.value+"";
+    document.getElementsByClassName("t1")[0].value=data[s1][s2]*parseFloat(str);
+    
+}
+let code=async()=>{
+    let rate=await fetch("https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1/currencies/usd.json");
+    let data=await rate.json();
+    let k=Object.keys(data.usd);
+    k.forEach((i)=>{
+     let opt=document.createElement("option");
+     opt.innerHTML=i;
+     opt.value=i;
+     document.getElementById("s2").append(opt);
+    });
+}
+let code_1=async()=>{
+    let rate=await fetch("https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1/currencies/usd.json");
+    let data=await rate.json();
+    let k=Object.keys(data.usd);
+    k.forEach((i)=>{
+     let opt=document.createElement("option");
+     opt.innerHTML=i;
+     opt.value=i;
+     document.getElementById("s1").append(opt);
+    });
+}
+code();
+code_1();
+    </script>
+</body>
+</html>
